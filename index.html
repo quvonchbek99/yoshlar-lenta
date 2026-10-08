@@ -48,6 +48,9 @@ h3{margin:0;font-size:16px;font-weight:700}
 .facts{display:flex;flex-wrap:wrap;gap:7px}
 .fact{font:500 11.5px var(--font-mono);color:var(--muted);border:1px solid var(--line);background:rgba(21,23,29,.72);border-radius:7px;padding:4px 9px}
 .txt{color:#ded9d1;font-size:14.5px;max-width:62ch;white-space:pre-wrap}
+.strip{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;max-width:100%}
+.strip::-webkit-scrollbar{display:none}
+.strip img{width:96px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}
 .res{border-left:3px solid var(--gold);padding:6px 0 6px 12px;color:#f0e6d4;font-size:14px;white-space:pre-wrap;max-width:62ch}
 .hint{position:absolute;left:0;right:0;bottom:8px;text-align:center;font:500 10.5px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.38);pointer-events:none}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
@@ -166,6 +169,9 @@ function reelHTML(r){
    '<span class="badge">'+esc(KAT_NOM[r.davr]||r.davr||'Tadbir')+'</span><h2>'+esc(r.title||'Nomsiz lavha')+'</h2>'+
    (facts.length?'<div class="facts">'+facts.map(function(f){return '<span class="fact">'+esc(f)+'</span>'}).join('')+'</div>':'')+
    (r.matn?'<div class="txt">'+esc(r.matn)+'</div>':'')+(r.natija?'<div class="res">'+esc(r.natija)+'</div>':'')+
+   ((r.photos&&r.photos.length>1)?'<div class="strip">'+r.photos.slice(0,8).map(function(u){
+      return '<a href="'+esc(u)+'" target="_blank" rel="noopener"><img src="'+esc(u)+'" alt="Tadbir surati" loading="lazy"></a>';
+    }).join('')+'</div>':'')+
    (r.link?'<div class="actions"><a class="btn" href="'+esc(r.link)+'" target="_blank" rel="noopener">Telegramda ko’rish ↗</a></div>':'')+
    '</div><div class="hint">↓ keyingi lavha</div></article>';
 }
