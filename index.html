@@ -166,6 +166,7 @@ function reelHTML(r){
    '<span class="badge">'+esc(KAT_NOM[r.davr]||r.davr||'Tadbir')+'</span><h2>'+esc(r.title||'Nomsiz lavha')+'</h2>'+
    (facts.length?'<div class="facts">'+facts.map(function(f){return '<span class="fact">'+esc(f)+'</span>'}).join('')+'</div>':'')+
    (r.matn?'<div class="txt">'+esc(r.matn)+'</div>':'')+(r.natija?'<div class="res">'+esc(r.natija)+'</div>':'')+
+   (r.link?'<div class="actions"><a class="btn" href="'+esc(r.link)+'" target="_blank" rel="noopener">Telegramda ko’rish ↗</a></div>':'')+
    '</div><div class="hint">↓ keyingi lavha</div></article>';
 }
 function yillarHTML(){
