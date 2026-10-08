@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Texnikum yoshlar lentasi</title>
+<meta name="description" content="Toshkent tuman 1-son texnikumi yoshlar ittifoqi boshlang'ich tashkiloti — tadbirlar, musobaqalar va ko'rik-tanlovlar lentasi.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#0c0d11; --panel:#15171d; --line:#262a33;
+  --fg:#f4f3ef; --muted:#a2a8b6;
+  --accent:#6fd3c7; --accent-ink:#0c0d11; --gold:#e5b567;
+  --font-body:"Manrope","Segoe UI",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+  padding-top:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.55;overflow:hidden}
+img{max-width:100%}
+.app{height:100%;display:flex;flex-direction:column}
+.topbar{flex:0 0 auto;display:flex;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);background:rgba(12,13,17,.92)}
+.brand{font-weight:800;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.brand span{display:block;font:500 10.5px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.filters{flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;padding:9px 16px;border-bottom:1px solid var(--line);scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.pill{flex:0 0 auto;font:600 12.5px var(--font-body);color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer;white-space:nowrap}
+.pill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.feed{flex:1 1 auto;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.reel{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border-bottom:1px solid var(--line)}
+.reel.mid{justify-content:center}
+.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fallback{position:absolute;inset:0;background:
+  radial-gradient(120% 90% at 20% 10%, rgba(111,211,199,.2), transparent 60%),
+  radial-gradient(90% 80% at 85% 90%, rgba(229,181,103,.16), transparent 60%), #12141a}
+.veil{position:absolute;inset:0;background:linear-gradient(to top, rgba(8,9,12,.94) 0%, rgba(8,9,12,.72) 32%, rgba(8,9,12,.18) 68%, rgba(8,9,12,.42) 100%)}
+.body,.pad{position:relative;padding:24px 20px 30px;display:flex;flex-direction:column;gap:11px;max-height:84%;overflow-y:auto;scrollbar-width:none;width:100%}
+.body::-webkit-scrollbar,.pad::-webkit-scrollbar{display:none}
+.badge{align-self:flex-start;font:500 10.5px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:4px 10px}
+.badge.alt{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+h2{font-size:clamp(21px,5.2vw,30px);font-weight:800;letter-spacing:-.02em;line-height:1.18;margin:0;text-wrap:balance}
+h3{margin:0;font-size:16px;font-weight:700}
+.facts{display:flex;flex-wrap:wrap;gap:7px}
+.fact{font:500 11.5px var(--font-mono);color:var(--muted);border:1px solid var(--line);background:rgba(21,23,29,.72);border-radius:7px;padding:4px 9px}
+.txt{color:#ded9d1;font-size:14.5px;max-width:62ch;white-space:pre-wrap}
+.res{border-left:3px solid var(--gold);padding:6px 0 6px 12px;color:#f0e6d4;font-size:14px;white-space:pre-wrap;max-width:62ch}
+.hint{position:absolute;left:0;right:0;bottom:8px;text-align:center;font:500 10.5px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.38);pointer-events:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px;min-width:0}
+.tile b{display:block;font-size:14.5px;margin-bottom:3px}
+.tile small{color:var(--muted);font-size:12.5px;line-height:1.45;display:block}
+.tile .k{font:500 10px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px}
+.tile a{display:inline-block;margin-top:8px;color:var(--accent);font-size:12.5px;font-weight:600;text-decoration:none;word-break:break-all}
+.nom{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+.nom b{display:block;font-size:14.5px}
+.nom small{color:var(--muted);font-size:12.5px;display:block}
+.nom .win{color:var(--gold);font-size:13px;margin-top:3px;display:block}
+.card{margin:0 auto;max-width:460px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.ava{width:88px;height:88px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);background:#222}
+.ava.ph{display:grid;place-items:center;font:800 29px var(--font-body);color:var(--accent)}
+.role{color:var(--muted);font-size:13.5px;margin:-6px 0 0}
+.clist{display:flex;flex-direction:column;gap:8px;width:100%}
+.ci{display:flex;align-items:center;gap:10px;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:rgba(12,13,17,.5);min-width:0}
+.ci b{font:500 10.5px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex:0 0 auto}
+.ci span{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1;text-align:right;user-select:all}
+.btn{font:600 13px var(--font-body);border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:9px;padding:9px 14px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+#qrbox{background:#fff;padding:14px;border-radius:14px;width:fit-content;margin:0 auto;line-height:0}
+#qrbox img,#qrbox canvas{display:block}
+audio{width:100%;max-width:440px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--fg);color:var(--bg);font-size:13px;padding:9px 16px;border-radius:999px;z-index:30;max-width:90%;text-align:center}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar"><div class="brand" id="brand">Texnikum yoshlar lentasi<span>Yoshlar ittifoqi lentasi</span></div></div>
+  <div class="filters" id="filters"></div>
+  <div class="feed" id="feed"></div>
+</div>
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]})};
+var site={},reels=[],tanlov=[],filter='all';
+
+var KAT=[["all","Hammasi"],["ch1","I chorak"],["ch2","II chorak"],["ch3","III chorak"],["ch4","IV chorak"],["yoz","Yozgi davr"],
+ ["musobaqa","Musobaqalar"],["tanlov","Ko'rik-tanlovlar"],["yolovchi","Yo'lovchi"],["tanaffus","Tanaffus"],
+ ["kitobxon","Kitobxon"],["eko","Ekoqo'riqchi"],["zakovat","Zakovat"],["fittime","FitTime"]];
+var KAT_NOM={};KAT.forEach(function(k){KAT_NOM[k[0]]=k[1]});
+var LOYIHA=[
+ ["yolovchi","Yo'lovchi","Yo'l harakati xavfsizligi harakati: piyodalar o'tish joyi, svetofor va velosiped qoidalari bo'yicha amaliy mashg'ulotlar, YHXB xodimlari bilan uchrashuvlar."],
+ ["tanaffus","Tanaffus","Tanaffus vaqtini mazmunli o'tkazish: jonli musiqa, mini-viktorina, stol tennisi va shashka burchagi, guruhlararo tezkor bellashuvlar."],
+ ["kitobxon","Kitobxon","Kitobxonlik harakati: oylik kitob muhokamasi, “O'qiganim — o'zgarganim” minbari, kutubxona bilan hamkorlikdagi tanlovlar."],
+ ["eko","Ekoqo'riqchi","Ekologik madaniyat: hudud tozaligi, ko'chat ekish, chiqindini saralash va suv tejash bo'yicha amaliy aksiyalar."],
+ ["zakovat","Zakovat","Intellektual o'yin klubi: guruhlararo “Zakovat” bosqichlari, mantiq va bilim bellashuvlari, tuman bosqichiga tayyorgarlik."],
+ ["fittime","FitTime","Sog'lom turmush tarzi: ertalabki mashq, kross, mini-futbol va voleybol, jismoniy tayyorgarlik normativlarini topshirish."]];
+var NOMIC=["★","⚽","\u{1F4D6}","\u{1F91D}","\u{1F9E0}","\u{1F465}","\u{1F393}"];
+var NOMIZOH=["Bilim, faollik va odob bo'yicha yakuniy ko'rsatkichlar","Musobaqalardagi natijalar va jamoa ruhi",
+ "O'qilgan kitoblar va muhokamalardagi ishtirok","Ijtimoiy aksiyalar va ko'ngillilik soatlari",
+ "Intellektual o'yin bosqichlaridagi natija","Davomat, o'zlashtirish va tadbirlardagi birdamlik","Iqtidorli o'quvchilarni tayyorlagan ustoz"];
+var ILOVA=[
+ ["Mutolaa","Kitobxonlik ilovasi — kitob o'qish, audiokitob va kundalik maqsadlar."],
+ ["Ibrat farzandlari","Chet tillarini bepul o'rgatuvchi loyiha, “Ibrat Academy” ilovasi."],
+ ["Ustoz AI","Yoshlar ishlari agentligi loyihasi: 40 dan ortiq zamonaviy kasb bo'yicha bepul video darslar, 14–30 yosh uchun."],
+ ["GG (Great Generation)","Yoshlar jamoasi va intellektual bellashuvlar platformasi."],
+ ["IELTS.uz","IELTS imtihoniga tayyorgarlik va sinov testlari."],
+ ["Englify","Ingliz tilini kundalik mashqlar orqali o'rganish."]];
+var YILLAR=[[1991,"Alisher Navoiy yili"],[1992,"Hamshiralar yili"],[1993,"Ahmad Yassaviy yili"],[1994,"Mirzo Ulug'bek yili"],
+ [1995,"Abu Ali ibn Sino yili"],[1996,"Amir Temur yili"],[1997,"Inson manfaatlari yili"],[1998,"Oila yili"],[1999,"Ayollar yili"],
+ [2000,"Sog'lom avlod yili"],[2001,"Ona va bola yili"],[2002,"Qariyalarni qadrlash yili"],[2003,"Obod mahalla yili"],
+ [2004,"Mehr-muruvvat yili"],[2005,"Sihat-salomatlik yili"],[2006,"Homiylar va shifokorlar yili"],[2007,"Ijtimoiy himoya yili"],
+ [2008,"Yoshlar yili"],[2009,"Qishloq taraqqiyoti va farovonligi yili"],[2010,"Barkamol avlod yili"],
+ [2011,"Kichik biznes va xususiy tadbirkorlik yili"],[2012,"Mustahkam oila yili"],[2013,"Obod turmush yili"],[2014,"Sog'lom bola yili"],
+ [2015,"Keksalarni e'zozlash yili"],[2016,"Sog'lom ona va bola yili"],[2017,"Xalq bilan muloqot va inson manfaatlari yili"],
+ [2018,"Faol tadbirkorlik, innovatsion g'oyalar va texnologiyalarni qo'llab-quvvatlash yili"],
+ [2019,"Faol investitsiyalar va ijtimoiy rivojlanish yili"],[2020,"Ilm-ma'rifat va raqamli iqtisodiyotni rivojlantirish yili"],
+ [2021,"Yoshlarni qo'llab-quvvatlash va aholi salomatligini mustahkamlash yili"],[2022,"Inson qadrini ulug'lash va faol mahalla yili"],
+ [2023,"Insonga e'tibor va sifatli ta'lim yili"],[2024,"Yoshlar va biznesni qo'llab-quvvatlash yili"],
+ [2025,"Atrof-muhitni asrash va yashil iqtisodiyot yili"],[2026,"Mahallani rivojlantirish va jamiyatni yuksaltirish yili"]];
+var VAZIFA=["O'quvchi-yoshlarning huquq va manfaatlarini himoya qilish",
+ "Ma'naviy-mafkuraviy dunyoqarashni mustahkamlash, mafkuraviy immunitetni shakllantirish",
+ "Iqtidorli yoshlarni kashf etish va har tomonlama qo'llab-quvvatlash",
+ "Ijtimoiy himoyaga muhtoj, yetim va ota-ona qaramog'idan mahrum yoshlarga ko'maklashish",
+ "Bo'sh vaqtni mazmunli tashkil etish: to'garak, klub va harakatlar",
+ "Kitobxonlik, sport va sog'lom turmush tarzini targ'ib qilish",
+ "Yoshlar turizmi, ekologik madaniyat va ko'ngillilikni rivojlantirish",
+ "Kasb-hunarga yo'naltirish va bandlikka ko'maklashish"];
+
+function toast(m){var t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2400);}
+function uzDate(iso){if(!iso)return '';var oy=['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktabr','noyabr','dekabr'];
+  var p=String(iso).split('-');if(p.length<3)return iso;return Number(p[2])+'-'+oy[Number(p[1])-1]+', '+p[0];}
+
+function renderFilters(){
+  $('#filters').innerHTML=KAT.map(function(k){return '<button class="pill" data-d="'+k[0]+'" aria-pressed="'+(filter===k[0])+'">'+esc(k[1])+'</button>'}).join('');
+}
+$('#filters').addEventListener('click',function(e){var b=e.target.closest('.pill');if(!b)return;
+  filter=b.dataset.d;renderFilters();renderFeed();$('#feed').scrollTop=0;});
+
+function heroHTML(){
+  var emb=site.emblem? '<img src="'+esc(site.emblem)+'" alt="Yoshlar ittifoqi emblemasi" style="width:104px;height:104px;object-fit:contain;border-radius:16px;background:rgba(255,255,255,.06);padding:8px">'
+    : '<div style="width:104px;height:104px;border-radius:16px;border:2px solid var(--accent);display:grid;place-items:center;font:800 30px var(--font-body);color:var(--accent)">YI</div>';
+  var an=site.anthem? '<audio controls preload="none" src="'+esc(site.anthem)+'"></audio><p class="txt" style="font-size:12px;color:var(--muted);margin:0">Yoshlar ittifoqi qo’shig’i</p>':'';
+  var rs=(site.rasmiySayt||'').trim();
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad">'+emb+
+   '<h2>O’zbekiston Yoshlar ittifoqi</h2>'+
+   '<p class="txt" style="margin:0">2017-yil 30-iyunda “Kamolot” yoshlar ijtimoiy harakatining IV qurultoyida, shu harakat negizida tashkil etilgan. Shu kun mamlakatda Yoshlar kuni sifatida nishonlanadi.</p>'+
+   '<h3>Boshlang’ich tashkilotning vazifalari</h3>'+
+   '<div class="grid">'+VAZIFA.map(function(v,i){return '<div class="tile"><span class="k">'+(i+1)+'-vazifa</span><small style="color:#ded9d1;font-size:13px">'+esc(v)+'</small></div>'}).join('')+'</div>'+
+   (rs?'<div class="actions"><a class="btn primary" href="'+esc(rs)+'" target="_blank" rel="noopener">Rasmiy sayt ↗</a></div>':'')+an+
+   '</div></article>';
+}
+function reelHTML(r){
+  var img=r.photo? '<img class="bgimg" src="'+esc(r.photo)+'" alt="'+esc(r.title||'Tadbir surati')+'">':'<div class="fallback"></div>';
+  var facts=[];if(r.sana)facts.push(uzDate(r.sana));if(r.joy)facts.push(r.joy);
+  if(r.ishtirok)facts.push(r.ishtirok+' ishtirokchi');if(r.tashkilotchi)facts.push(r.tashkilotchi);
+  return '<article class="reel">'+img+'<div class="veil"></div><div class="body">'+
+   '<span class="badge">'+esc(KAT_NOM[r.davr]||r.davr||'Tadbir')+'</span><h2>'+esc(r.title||'Nomsiz lavha')+'</h2>'+
+   (facts.length?'<div class="facts">'+facts.map(function(f){return '<span class="fact">'+esc(f)+'</span>'}).join('')+'</div>':'')+
+   (r.matn?'<div class="txt">'+esc(r.matn)+'</div>':'')+(r.natija?'<div class="res">'+esc(r.natija)+'</div>':'')+
+   '</div><div class="hint">↓ keyingi lavha</div></article>';
+}
+function yillarHTML(){
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad"><span class="badge alt">1991 — 2026</span>'+
+   '<h2>O’zbekistonda yillar nomi</h2>'+
+   '<div class="grid">'+YILLAR.slice().reverse().map(function(y){
+     var yosh=/[Yy]osh|Barkamol avlod|Sog’lom avlod/.test(y[1]);
+     return '<div class="tile"'+(yosh?' style="border-color:var(--gold)"':'')+'><span class="k"'+(yosh?' style="color:var(--gold)"':'')+'>'+y[0]+'</span><small style="color:#ded9d1;font-size:13px">'+esc(y[1])+'</small></div>';
+   }).join('')+'</div></div></article>';
+}
+function loyihaHTML(){
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad"><span class="badge">Doimiy loyihalar</span>'+
+   '<h2>Yoshlar harakatlari</h2><div class="grid">'+LOYIHA.map(function(l){
+     return '<div class="tile"><span class="k">'+esc(KAT_NOM[l[0]])+'</span><b>'+esc(l[1])+'</b><small>'+esc(l[2])+'</small></div>';
+   }).join('')+'</div></div></article>';
+}
+function tanlovHTML(){
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad"><span class="badge alt">Ko’rik-tanlov</span>'+
+   '<h2>Yil yakuni nominatsiyalari</h2>'+
+   tanlov.map(function(t,i){
+     return '<div class="nom"><span>'+(NOMIC[i]||'★')+'</span><div style="min-width:0"><b>'+esc(t.nom)+'</b><small>'+esc(NOMIZOH[i]||'')+'</small>'+
+       (t.golib?'<span class="win">G’olib: '+esc(t.golib)+(t.guruh?' ('+esc(t.guruh)+')':'')+'</span>':'<span class="win" style="color:var(--muted)">Nomzodlar qabul qilinmoqda</span>')+'</div></div>';
+   }).join('')+'</div></article>';
+}
+function murojaatHTML(){
+  var gl=(site.googleForm||'').trim(), tg=(site.telegramBot||'').trim();
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad"><span class="badge">Murojaat</span>'+
+   '<h2>G’oya, taklif va shikoyat</h2>'+
+   '<p class="txt" style="margin:0">Fikringizni quyidagi yo’llardan biri orqali yuboring.</p><div class="actions">'+
+   (gl?'<a class="btn primary" href="'+esc(gl)+'" target="_blank" rel="noopener">Google shakli orqali</a>':'')+
+   (tg?'<a class="btn" href="'+esc(tg)+'" target="_blank" rel="noopener">Telegram orqali</a>':'')+
+   ((site.email||'').trim()?'<button class="btn" data-copy="'+esc(site.email)+'">E-pochtani nusxalash</button>':'')+
+   '</div>'+(!gl&&!tg?'<p class="txt" style="font-size:13px;color:var(--muted)">Murojaat havolalari tez orada qo’shiladi.</p>':'')+
+   '</div></article>';
+}
+function ilovaHTML(){
+  var links=site.ilovaLinks||{};
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad"><span class="badge">Foydali ilovalar</span>'+
+   '<h2>Yoshlarni birlashtiruvchi loyiha va startaplar</h2><div class="grid">'+ILOVA.map(function(a,i){
+     var u=(links['a'+i]||'').trim();
+     return '<div class="tile"><b>'+esc(a[0])+'</b><small>'+esc(a[1])+'</small>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">Ochish ↗</a>':'')+'</div>';
+   }).join('')+'</div></div></article>';
+}
+function contactHTML(){
+  var ph=site.profilePhoto? '<img class="ava" src="'+esc(site.profilePhoto)+'" alt="Rahbar surati">'
+   : '<div class="ava ph">'+esc((site.rahbar||'Y').trim().charAt(0).toUpperCase())+'</div>';
+  var items=[['Telefon',site.tel],['Telegram',site.telegram],['E-pochta',site.email],['Manzil',site.manzil],['Qabul vaqti',site.qabul]]
+   .filter(function(x){return (x[1]||'').trim()});
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad"><div class="card">'+ph+
+   '<span class="badge alt">Bog’lanish</span><h2>'+esc(site.rahbar||'Yoshlar yetakchisi')+'</h2>'+
+   '<p class="role">'+esc(site.lavozim||'')+(site.muassasa?' · '+esc(site.muassasa):'')+'</p>'+
+   (site.bio?'<div class="txt" style="font-size:14px">'+esc(site.bio)+'</div>':'')+
+   (items.length?'<div class="clist">'+items.map(function(x){
+     return '<div class="ci"><b>'+esc(x[0])+'</b><span>'+esc(x[1])+'</span><button class="btn" style="padding:4px 8px;font-size:11.5px" data-copy="'+esc(x[1])+'">nusxa</button></div>';
+   }).join('')+'</div>':'')+'</div></div></article>';
+}
+function qrHTML(){
+  return '<article class="reel mid"><div class="fallback"></div><div class="pad" style="align-items:center;text-align:center">'+
+   '<span class="badge">Ulashish</span><h2 style="text-align:center">Saytni telefonga oling</h2>'+
+   '<div id="qrbox"></div><p class="txt" style="font-size:13px;color:var(--muted);text-align:center;margin:0" id="qrurl"></p>'+
+   '<div class="actions"><button class="btn" id="qrcopy">Havolani nusxalash</button></div></div></article>';
+}
+function renderFeed(){
+  var list=reels.filter(function(r){return filter==='all'||r.davr===filter});
+  var mid=list.length? list.map(reelHTML).join('')
+    : '<article class="reel"><div class="fallback"></div><div class="veil"></div><div class="body"><span class="badge">Lenta</span>'+
+      '<h2>Bu bo’lim bo’yicha lavha yo’q</h2><div class="txt">Boshqa bo’limni tanlang.</div></div></article>';
+  $('#feed').innerHTML=heroHTML()+mid+yillarHTML()+loyihaHTML()+tanlovHTML()+murojaatHTML()+ilovaHTML()+contactHTML()+qrHTML();
+  drawQR();
+}
+function shareUrl(){return (site.shareUrl||'').trim()||location.href.split('#')[0];}
+function drawQR(){
+  var box=document.getElementById('qrbox');if(!box)return;
+  var url=shareUrl(), lbl=document.getElementById('qrurl');
+  if(lbl)lbl.textContent=url;
+  box.innerHTML='';
+  try{ new QRCode(box,{text:url,width:188,height:188,correctLevel:QRCode.CorrectLevel.M}); }catch(e){ box.style.display='none'; }
+  var c=document.getElementById('qrcopy');
+  if(c)c.addEventListener('click',function(){
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(url).then(function(){toast('Nusxalandi')},function(){toast('Nusxalanmadi')});
+  });
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-copy]');if(!b||!b.dataset.copy)return;
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(b.dataset.copy).then(function(){toast('Nusxalandi')},function(){toast('Nusxalanmadi')});
+});
+function renderBrand(){
+  $('#brand').innerHTML=esc(site.muassasa||'Texnikum yoshlar lentasi')+'<span>'+esc(site.tagline||'Yoshlar ittifoqi lentasi')+'</span>';
+}
+renderFilters();renderBrand();renderFeed();
+fetch('data.json?v='+Date.now()).then(function(r){return r.json()}).then(function(d){
+  site=d.site||{};reels=(d.reels||[]).slice().sort(function(a,b){return String(b.sana||'').localeCompare(String(a.sana||''))});
+  tanlov=d.tanlov||[];renderBrand();renderFeed();
+}).catch(function(){toast('data.json o’qilmadi')});
+})();
+</script>
+</body>
+</html>

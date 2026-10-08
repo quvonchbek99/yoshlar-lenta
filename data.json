@@ -1,0 +1,47 @@
+{
+  "site": {
+    "muassasa": "Toshkent tuman 1-son texnikumi",
+    "tagline": "Yoshlar ittifoqi lentasi",
+    "rahbar": "Mashrapov Q.",
+    "lavozim": "Matematika o'qituvchisi, 05-25 guruh rahbari",
+    "bio": "Tadbir, musobaqa va ko'rik-tanlovlar bo'yicha takliflaringizni yuboring — lentaga qo'shamiz.",
+    "tel": "",
+    "telegram": "",
+    "email": "",
+    "manzil": "",
+    "qabul": "",
+    "emblem": "",
+    "profilePhoto": "",
+    "anthem": "images/madhiya.mp4",
+    "rasmiySayt": "https://yoshlarittifoqi.uz/",
+    "telegramBot": "",
+    "googleForm": "",
+    "shareUrl": "",
+    "ilovaLinks": {
+      "a1": "https://ibratfarzandlari.uz/",
+      "a2": "https://onelink.to/txykgw"
+    }
+  },
+  "reels": [
+    {
+      "title": "Toshkent tuman 1-son texnikumi",
+      "davr": "ch1",
+      "sana": "2026-09-02",
+      "joy": "Texnikum binosi",
+      "ishtirok": "",
+      "tashkilotchi": "Yoshlar ittifoqi boshlang'ich tashkiloti",
+      "matn": "Bu lenta texnikum o'quvchilarining ommaviy tadbirlari, musobaqalari va ko'rik-tanlovlari uchun. Har bir lavhada tadbirning bayoni, ishtirokchilar soni va natijalar tahlili beriladi.\n\nLavhalarni davr bo'yicha — chorak, yozgi davr, musobaqa yoki ko'rik-tanlov kesimida — saralab ko'rishingiz mumkin.",
+      "natija": "",
+      "photo": "images/texnikum.jpg"
+    }
+  ],
+  "tanlov": [
+    { "nom": "Yil o'quvchisi", "golib": "", "guruh": "" },
+    { "nom": "Yil sportchisi", "golib": "", "guruh": "" },
+    { "nom": "Yil kitobxoni", "golib": "", "guruh": "" },
+    { "nom": "Yil volontyori", "golib": "", "guruh": "" },
+    { "nom": "Yil zakovatchisi", "golib": "", "guruh": "" },
+    { "nom": "Yil guruhi", "golib": "", "guruh": "" },
+    { "nom": "Yil murabbiysi", "golib": "", "guruh": "" }
+  ]
+}
